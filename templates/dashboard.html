@@ -68,7 +68,12 @@
                 </svg>
             </div>
         </div>
-        <span class="mt-4 text-sm text-gray-400 dark:text-gray-500">Yakında...</span>
+        <a href="{{ url_for('todos') }}?status=pending" class="mt-4 text-sm text-yellow-600 dark:text-yellow-400 hover:underline inline-flex items-center">
+            Görevleri Gör
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
     </div>
     
     <div class="card hover:border-purple-500 dark:hover:border-purple-400 transition-all">
@@ -144,20 +149,18 @@
                 </svg>
                 <span class="text-sm font-medium text-green-700 dark:text-green-300">Fikirlerim</span>
             </a>
-            <div class="flex flex-col items-center justify-center p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg opacity-50 cursor-not-allowed text-center">
+            <a href="{{ url_for('new_plan') }}" class="flex flex-col items-center justify-center p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/50 transition-colors text-center">
                 <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 <span class="text-sm font-medium text-yellow-700 dark:text-yellow-300">Yeni Plan</span>
-                <span class="text-xs text-yellow-600 dark:text-yellow-400">Yakında</span>
-            </div>
-            <div class="flex flex-col items-center justify-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg opacity-50 cursor-not-allowed text-center">
+            </a>
+            <a href="{{ url_for('new_todo') }}" class="flex flex-col items-center justify-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors text-center">
                 <svg class="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                 </svg>
-                <span class="text-sm font-medium text-purple-700 dark:text-purple-300">Yeni Todo</span>
-                <span class="text-xs text-purple-600 dark:text-purple-400">Yakında</span>
-            </div>
+                <span class="text-sm font-medium text-purple-700 dark:text-purple-300">Yeni Görev</span>
+            </a>
         </div>
     </div>
 </div>

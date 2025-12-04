@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}{% if plan %}Planı Düzenle{% else %}Yeni Plan{% endif %} - DevNotebook{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ url_for('plans') }}" class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Planlara Dön
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{% if plan %}Planı Düzenle{% else %}Yeni Plan Oluştur{% endif %}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">Proje planınızın detaylarını doldurun</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300{% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="mb-6 border-b border-gray-200 dark:border-slate-700">
+            <nav class="flex space-x-4" id="tabs">
+                <button type="button" class="tab-btn active px-4 py-2 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400" data-tab="general">
+                    Genel Bilgiler
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" data-tab="mvp">
+                    MVP Özellikleri
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" data-tab="technical">
+                    Teknik Detaylar
+                </button>
+            </nav>
+        </div>
+        
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div id="tab-general" class="tab-content">
+                <div class="space-y-6">
+                    <div>
+                        <label for="title" class="label">
+                            Plan Başlığı <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="title" name="title" required
+                            class="input" 
+                            placeholder="Örn: E-Ticaret Platformu MVP"
+                            value="{{ plan.title if plan else '' }}">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Projenizi tanımlayan kısa ve öz bir başlık</p>
+                    </div>
+                    
+                    <div>
+                        <label for="description" class="label">Proje Açıklaması</label>
+                        <textarea id="description" name="description" rows="3"
+                            class="input resize-none"
+                            placeholder="Bu proje ne yapmayı hedefliyor? Kapsamı nedir?">{{ plan.description if plan else '' }}</textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label for="status" class="label">Durum</label>
+                            <select id="status" name="status" class="input">
+                                <option value="planning" {% if plan and plan.status == 'planning' %}selected{% endif %}>Planlama</option>
+                                <option value="in_progress" {% if plan and plan.status == 'in_progress' %}selected{% endif %}>Geliştiriliyor</option>
+                                <option value="on_hold" {% if plan and plan.status == 'on_hold' %}selected{% endif %}>Beklemede</option>
+                                <option value="completed" {% if plan and plan.status == 'completed' %}selected{% endif %}>Tamamlandı</option>
+                                <option value="cancelled" {% if plan and plan.status == 'cancelled' %}selected{% endif %}>İptal Edildi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="priority" class="label">Öncelik</label>
+                            <select id="priority" name="priority" class="input">
+                                <option value="low" {% if plan and plan.priority == 'low' %}selected{% endif %}>Düşük</option>
+                                <option value="medium" {% if not plan or plan.priority == 'medium' %}selected{% endif %}>Orta</option>
+                                <option value="high" {% if plan and plan.priority == 'high' %}selected{% endif %}>Yüksek</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="progress" class="label">İlerleme (%)</label>
+                            <input type="number" id="progress" name="progress" min="0" max="100"
+                                class="input"
+                                value="{{ plan.progress if plan else 0 }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-mvp" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg mb-4">
+                        <h3 class="font-medium text-indigo-900 dark:text-indigo-200 mb-2">MoSCoW Metodu</h3>
+                        <p class="text-sm text-indigo-700 dark:text-indigo-300">Özelliklerinizi önem sırasına göre kategorize edin. Her satıra bir özellik yazın.</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mvp_must_have" class="label flex items-center">
+                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                            Must Have (Olmazsa Olmaz)
+                        </label>
+                        <textarea id="mvp_must_have" name="mvp_must_have" rows="4"
+                            class="input resize-none font-mono text-sm"
+                            placeholder="- Kullanıcı kayıt/giriş sistemi&#10;- Ürün listeleme sayfası&#10;- Sepet fonksiyonu">{{ plan.mvp_must_have if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Projenin çalışması için mutlaka gerekli özellikler</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mvp_should_have" class="label flex items-center">
+                            <span class="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>
+                            Should Have (Olmalı)
+                        </label>
+                        <textarea id="mvp_should_have" name="mvp_should_have" rows="3"
+                            class="input resize-none font-mono text-sm"
+                            placeholder="- Ürün arama ve filtreleme&#10;- Favorilere ekleme">{{ plan.mvp_should_have if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Önemli ama MVP'de olmasa da olur</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mvp_could_have" class="label flex items-center">
+                            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                            Could Have (Olabilir)
+                        </label>
+                        <textarea id="mvp_could_have" name="mvp_could_have" rows="3"
+                            class="input resize-none font-mono text-sm"
+                            placeholder="- Sosyal medya ile giriş&#10;- Ürün yorumları">{{ plan.mvp_could_have if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Zaman kalırsa eklenebilir</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mvp_wont_have" class="label flex items-center">
+                            <span class="w-3 h-3 bg-gray-400 rounded-full mr-2"></span>
+                            Won't Have (Bu Sürümde Yok)
+                        </label>
+                        <textarea id="mvp_wont_have" name="mvp_wont_have" rows="3"
+                            class="input resize-none font-mono text-sm"
+                            placeholder="- Mobil uygulama&#10;- Çoklu dil desteği">{{ plan.mvp_wont_have if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Bu sürümde kesinlikle yapılmayacak (gelecek sürümlere)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-technical" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div>
+                        <label for="tech_stack" class="label">
+                            Teknoloji Yığını (Tech Stack)
+                        </label>
+                        <textarea id="tech_stack" name="tech_stack" rows="3"
+                            class="input resize-none"
+                            placeholder="Python, Flask, PostgreSQL, TailwindCSS, JavaScript">{{ plan.tech_stack if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Virgülle ayırarak kullanılacak teknolojileri yazın</p>
+                    </div>
+                    
+                    <div>
+                        <label for="db_schema" class="label">
+                            Veritabanı Şeması
+                        </label>
+                        <textarea id="db_schema" name="db_schema" rows="10"
+                            class="input resize-none font-mono text-sm"
+                            placeholder="Users:&#10;  - id (PK)&#10;  - email (unique)&#10;  - password_hash&#10;  - created_at&#10;&#10;Products:&#10;  - id (PK)&#10;  - user_id (FK -> Users)&#10;  - name&#10;  - price&#10;  - description">{{ plan.db_schema if plan else '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Tablo ve sütun yapısını burada planlayın</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-slate-700">
+                <a href="{{ url_for('plans') }}" class="btn btn-secondary">İptal</a>
+                <button type="submit" class="btn btn-primary">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    {% if plan %}Güncelle{% else %}Kaydet{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            
+            tabBtns.forEach(b => {
+                b.classList.remove('active', 'border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
+                b.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            this.classList.add('active', 'border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+        });
+    });
+});
+</script>
+{% endblock %}

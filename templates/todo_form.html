@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{% if todo %}Görevi Düzenle{% else %}Yeni Görev{% endif %} - DevNotebook{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ url_for('todos') }}" class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Görevlere Dön
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{% if todo %}Görevi Düzenle{% else %}Yeni Görev Ekle{% endif %}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">Görev detaylarını doldurun</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300{% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div>
+                <label for="title" class="label">
+                    Görev Başlığı <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="title" name="title" required
+                    class="input" 
+                    placeholder="Örn: Kullanıcı kayıt formunu oluştur"
+                    value="{{ todo.title if todo else '' }}">
+            </div>
+            
+            <div>
+                <label for="description" class="label">Açıklama</label>
+                <textarea id="description" name="description" rows="3"
+                    class="input resize-none"
+                    placeholder="Görev hakkında ek detaylar...">{{ todo.description if todo else '' }}</textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="plan_id" class="label">Bağlı Proje</label>
+                    <select id="plan_id" name="plan_id" class="input">
+                        <option value="">Proje Seçin (Opsiyonel)</option>
+                        {% for plan in plans %}
+                        <option value="{{ plan.id }}" {% if (todo and todo.plan_id == plan.id) or (request.args.get('plan_id') == plan.id|string) %}selected{% endif %}>{{ plan.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Görevi bir projeye bağlayabilirsiniz</p>
+                </div>
+                <div>
+                    <label for="priority" class="label">Öncelik</label>
+                    <select id="priority" name="priority" class="input">
+                        <option value="low" {% if todo and todo.priority == 'low' %}selected{% endif %}>
+                            Düşük
+                        </option>
+                        <option value="medium" {% if not todo or todo.priority == 'medium' %}selected{% endif %}>
+                            Orta
+                        </option>
+                        <option value="high" {% if todo and todo.priority == 'high' %}selected{% endif %}>
+                            Yüksek
+                        </option>
+                    </select>
+                </div>
+            </div>
+            
+            <div>
+                <label for="due_date" class="label">Bitiş Tarihi</label>
+                <input type="date" id="due_date" name="due_date"
+                    class="input"
+                    value="{{ todo.due_date.strftime('%Y-%m-%d') if todo and todo.due_date else '' }}">
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Görevin tamamlanması gereken tarih (opsiyonel)</p>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-slate-700">
+                <a href="{{ url_for('todos') }}" class="btn btn-secondary">İptal</a>
+                <button type="submit" class="btn btn-primary">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    {% if todo %}Güncelle{% else %}Kaydet{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
