@@ -36,67 +36,219 @@
 }
 
 .card {
-    @apply bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4 transition-all duration-200;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    transition: all 200ms ease;
+}
+
+.dark .card {
+    background-color: #1e293b;
+    border-color: #334155;
 }
 
 .card:hover {
-    @apply shadow-md;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-150;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 150ms ease;
+    cursor: pointer;
+    border: none;
 }
 
 .btn-primary {
-    @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900;
+    background-color: #4f46e5;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #4f46e5;
+}
+
+.dark .btn-primary:focus {
+    box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px #4f46e5;
 }
 
 .btn-secondary {
-    @apply bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600;
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.dark .btn-secondary {
+    background-color: #334155;
+    color: #e5e7eb;
+    border-color: #475569;
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+}
+
+.dark .btn-secondary:hover {
+    background-color: #475569;
 }
 
 .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900;
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+.btn-danger:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #dc2626;
+}
+
+.dark .btn-danger:focus {
+    box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px #dc2626;
 }
 
 .input {
-    @apply w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #111827;
+    transition: all 150ms ease;
+}
+
+.dark .input {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f3f4f6;
+}
+
+.input:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #4f46e5;
 }
 
 .label {
-    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+.dark .label {
+    color: #d1d5db;
 }
 
 .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .badge-primary {
-    @apply bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200;
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.dark .badge-primary {
+    background-color: #312e81;
+    color: #c7d2fe;
 }
 
 .badge-success {
-    @apply bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200;
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.dark .badge-success {
+    background-color: #14532d;
+    color: #bbf7d0;
 }
 
 .badge-warning {
-    @apply bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200;
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.dark .badge-warning {
+    background-color: #78350f;
+    color: #fde68a;
 }
 
 .badge-danger {
-    @apply bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200;
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.dark .badge-danger {
+    background-color: #7f1d1d;
+    color: #fecaca;
 }
 
 .badge-gray {
-    @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200;
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.dark .badge-gray {
+    background-color: #374151;
+    color: #e5e7eb;
 }
 
 .sidebar-active {
-    @apply bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-200 border-l-4 border-indigo-600 dark:border-indigo-400;
+    background-color: #eef2ff;
+    color: #4338ca;
+    border-left: 4px solid #4f46e5;
+}
+
+.dark .sidebar-active {
+    background-color: rgba(79, 70, 229, 0.2);
+    color: #c7d2fe;
+    border-left-color: #818cf8;
 }
 
 .nav-item {
-    @apply flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors;
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    color: #374151;
+    transition: all 150ms ease;
+}
+
+.dark .nav-item {
+    color: #e5e7eb;
+}
+
+.nav-item:hover {
+    background-color: #f3f4f6;
+}
+
+.dark .nav-item:hover {
+    background-color: #334155;
 }
 
 @keyframes fadeIn {
@@ -128,21 +280,61 @@
 }
 
 .skeleton {
-    @apply bg-gray-200 dark:bg-slate-700 rounded animate-pulse;
+    background-color: #e5e7eb;
+    border-radius: 0.25rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dark .skeleton {
+    background-color: #334155;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .empty-state {
-    @apply flex flex-col items-center justify-center py-12 text-center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    text-align: center;
 }
 
 .empty-state-icon {
-    @apply w-16 h-16 text-gray-400 dark:text-gray-500 mb-4;
+    width: 4rem;
+    height: 4rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+}
+
+.dark .empty-state-icon {
+    color: #6b7280;
 }
 
 .empty-state-title {
-    @apply text-lg font-medium text-gray-900 dark:text-gray-100 mb-2;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.dark .empty-state-title {
+    color: #f3f4f6;
 }
 
 .empty-state-description {
-    @apply text-sm text-gray-500 dark:text-gray-400 max-w-sm;
+    font-size: 0.875rem;
+    color: #6b7280;
+    max-width: 20rem;
+}
+
+.dark .empty-state-description {
+    color: #9ca3af;
 }
