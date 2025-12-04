@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - DevNotebook{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-1">Welcome to DevNotebook - Your productivity companion</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Total Ideas</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+            </div>
+            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Active Plans</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">5</p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Pending Todos</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">8</p>
+            </div>
+            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Completed</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">24</p>
+            </div>
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Ideas</h2>
+            <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">View all</a>
+        </div>
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-white">Task Management App</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">A mobile-first productivity tool</p>
+                </div>
+                <span class="badge badge-primary">New</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-white">AI Code Assistant</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Integrate LLM for code review</p>
+                </div>
+                <span class="badge badge-success">In Progress</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <div>
+                    <p class="font-medium text-gray-900 dark:text-white">Portfolio Website</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Showcase developer projects</p>
+                </div>
+                <span class="badge badge-gray">Draft</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Upcoming Todos</h2>
+            <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">View all</a>
+        </div>
+        <div class="space-y-3">
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <div class="ml-3 flex-1">
+                    <p class="font-medium text-gray-900 dark:text-white">Review pull requests</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Due today</p>
+                </div>
+                <span class="badge badge-danger">High</span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <div class="ml-3 flex-1">
+                    <p class="font-medium text-gray-900 dark:text-white">Update documentation</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Due tomorrow</p>
+                </div>
+                <span class="badge badge-warning">Medium</span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <div class="ml-3 flex-1">
+                    <p class="font-medium text-gray-900 dark:text-white">Setup CI/CD pipeline</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Due in 3 days</p>
+                </div>
+                <span class="badge badge-primary">Normal</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
