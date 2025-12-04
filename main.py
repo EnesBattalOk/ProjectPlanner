@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -7,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['SECRET_KEY'] = os.environ.get('SESSION_SECRET', os.environ.get('SECRET_KEY'))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -17,6 +18,14 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Bu sayfayı görüntülemek için giriş yapmalısınız.'
 login_manager.login_message_category = 'error'
+
+
+def is_safe_url(target):
+    if not target:
+        return False
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(target)
+    return test_url.scheme in ('', 'http', 'https') and ref_url.netloc == test_url.netloc
 
 
 class User(UserMixin, db.Model):
@@ -72,8 +81,11 @@ def login():
         if user and user.check_password(password):
             login_user(user, remember=remember)
             next_page = request.args.get('next')
+            if next_page and is_safe_url(next_page):
+                flash('Başarıyla giriş yaptınız!', 'success')
+                return redirect(next_page)
             flash('Başarıyla giriş yaptınız!', 'success')
-            return redirect(next_page if next_page else url_for('dashboard'))
+            return redirect(url_for('dashboard'))
         else:
             flash('E-posta veya şifre hatalı.', 'error')
     
@@ -127,7 +139,7 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
