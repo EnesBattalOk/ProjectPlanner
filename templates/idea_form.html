@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{% if idea %}Fikri Düzenle{% else %}Yeni Fikir{% endif %} - DevNotebook{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ url_for('ideas') }}" class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Fikirlere Dön
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{% if idea %}Fikri Düzenle{% else %}Yeni Fikir Oluştur{% endif %}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">Proje fikrinizin detaylarını doldurun</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300{% else %}bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div>
+                <label for="title" class="label">
+                    Fikir Başlığı <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="title" name="title" required
+                    class="input" 
+                    placeholder="Örn: AI Destekli Kod Review Aracı"
+                    value="{{ idea.title if idea else '' }}">
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Projenizi tanımlayan kısa ve öz bir başlık</p>
+            </div>
+            
+            <div>
+                <label for="elevator_pitch" class="label">
+                    Asansör Konuşması
+                    <span class="text-xs font-normal text-gray-500 dark:text-gray-400 ml-2">(30 saniyede anlat)</span>
+                </label>
+                <textarea id="elevator_pitch" name="elevator_pitch" rows="3"
+                    class="input resize-none"
+                    placeholder="Bu proje ne yapar ve neden önemli? 2-3 cümlede özetleyin...">{{ idea.elevator_pitch if idea else '' }}</textarea>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Birine 30 saniyede projenizi nasıl anlatırdınız?</p>
+            </div>
+            
+            <div>
+                <label for="problem_statement" class="label">
+                    Çözdüğü Problem
+                </label>
+                <textarea id="problem_statement" name="problem_statement" rows="3"
+                    class="input resize-none"
+                    placeholder="Hangi problemi çözüyor? Neden bu problemi çözmek önemli?">{{ idea.problem_statement if idea else '' }}</textarea>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Bu projenin var olma sebebi nedir?</p>
+            </div>
+            
+            <div>
+                <label for="target_audience" class="label">
+                    Hedef Kitle
+                </label>
+                <input type="text" id="target_audience" name="target_audience"
+                    class="input"
+                    placeholder="Örn: Junior geliştiriciler, Startup kurucuları"
+                    value="{{ idea.target_audience if idea else '' }}">
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Bu ürünü kimler kullanacak?</p>
+            </div>
+            
+            <div>
+                <label for="unique_value" class="label">
+                    Benzersiz Değer Önerisi
+                </label>
+                <textarea id="unique_value" name="unique_value" rows="2"
+                    class="input resize-none"
+                    placeholder="Bu proje rakiplerinden nasıl farklı? Neden kullanıcılar bunu tercih etmeli?">{{ idea.unique_value if idea else '' }}</textarea>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Rekabetten ayrıştıran özellikler neler?</p>
+            </div>
+            
+            <div>
+                <label for="tech_stack" class="label">
+                    Teknoloji Stack
+                </label>
+                <input type="text" id="tech_stack" name="tech_stack"
+                    class="input"
+                    placeholder="Örn: Python, Flask, PostgreSQL, React, TailwindCSS"
+                    value="{{ idea.tech_stack if idea else '' }}">
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Hangi teknolojileri kullanmayı planlıyorsunuz?</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="status" class="label">Durum</label>
+                    <select id="status" name="status" class="input">
+                        <option value="draft" {% if idea and idea.status == 'draft' %}selected{% endif %}>Taslak</option>
+                        <option value="reviewing" {% if idea and idea.status == 'reviewing' %}selected{% endif %}>İnceleniyor</option>
+                        <option value="approved" {% if idea and idea.status == 'approved' %}selected{% endif %}>Onaylandı</option>
+                        <option value="in_progress" {% if idea and idea.status == 'in_progress' %}selected{% endif %}>Geliştiriliyor</option>
+                        <option value="completed" {% if idea and idea.status == 'completed' %}selected{% endif %}>Tamamlandı</option>
+                        <option value="archived" {% if idea and idea.status == 'archived' %}selected{% endif %}>Arşivlendi</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="priority" class="label">Öncelik</label>
+                    <select id="priority" name="priority" class="input">
+                        <option value="low" {% if idea and idea.priority == 'low' %}selected{% endif %}>Düşük</option>
+                        <option value="medium" {% if not idea or idea.priority == 'medium' %}selected{% endif %}>Orta</option>
+                        <option value="high" {% if idea and idea.priority == 'high' %}selected{% endif %}>Yüksek</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-slate-700">
+                <a href="{{ url_for('ideas') }}" class="btn btn-secondary">İptal</a>
+                <button type="submit" class="btn btn-primary">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    {% if idea %}Güncelle{% else %}Kaydet{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

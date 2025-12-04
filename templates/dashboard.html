@@ -3,66 +3,92 @@
 {% block title %}Dashboard - DevNotebook{% endblock %}
 
 {% block content %}
-<div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hoş Geldin, {{ current_user.username }}!</h1>
-    <p class="text-gray-600 dark:text-gray-400 mt-1">Projelerini planla ve fikirlerini organize et</p>
+<div class="mb-8">
+    <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            {{ current_user.username[0]|upper }}
+        </div>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hoş Geldin, {{ current_user.username }}!</h1>
+            <p class="text-gray-600 dark:text-gray-400">{{ current_user.title or 'Developer' }}</p>
+        </div>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <div class="card">
+    <div class="card hover:border-indigo-500 dark:hover:border-indigo-400 transition-all">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Toplam Fikir</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ total_ideas }}</p>
             </div>
-            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
             </div>
         </div>
+        <a href="{{ url_for('ideas') }}" class="mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center">
+            Fikirleri Gör
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
     </div>
     
-    <div class="card">
+    <div class="card hover:border-green-500 dark:hover:border-green-400 transition-all">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Aktif Projeler</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ active_ideas }}</p>
             </div>
-            <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
             </div>
         </div>
+        <a href="{{ url_for('ideas') }}?status=in_progress" class="mt-4 text-sm text-green-600 dark:text-green-400 hover:underline inline-flex items-center">
+            Aktif Projeleri Gör
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
     </div>
     
-    <div class="card">
+    <div class="card hover:border-yellow-500 dark:hover:border-yellow-400 transition-all">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Bekleyen Görevler</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ pending_todos }}</p>
             </div>
-            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-yellow-100 dark:bg-yellow-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                 </svg>
             </div>
         </div>
+        <span class="mt-4 text-sm text-gray-400 dark:text-gray-500">Yakında...</span>
     </div>
     
-    <div class="card">
+    <div class="card hover:border-purple-500 dark:hover:border-purple-400 transition-all">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Tamamlanan</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ completed_count }}</p>
             </div>
-            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
         </div>
+        <a href="{{ url_for('ideas') }}?status=completed" class="mt-4 text-sm text-purple-600 dark:text-purple-400 hover:underline inline-flex items-center">
+            Tamamlananları Gör
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
     </div>
 </div>
 
@@ -70,28 +96,68 @@
     <div class="card">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Son Fikirler</h2>
-            <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Tümünü Gör</a>
+            <a href="{{ url_for('ideas') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Tümünü Gör</a>
         </div>
-        <div class="empty-state">
-            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-            </svg>
-            <h3 class="empty-state-title">Henüz fikir yok</h3>
-            <p class="empty-state-description">İlk fikrinizi ekleyerek başlayın</p>
-        </div>
+        {% if recent_ideas %}
+            <div class="space-y-3">
+                {% for idea in recent_ideas %}
+                <a href="{{ url_for('view_idea', idea_id=idea.id) }}" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900 dark:text-white truncate">{{ idea.title }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ idea.elevator_pitch or 'Açıklama yok' }}</p>
+                    </div>
+                    <span class="badge badge-{{ idea.status_color }} ml-3 flex-shrink-0">{{ idea.status_label }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state py-8">
+                <svg class="empty-state-icon w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+                <h3 class="empty-state-title">Henüz fikir yok</h3>
+                <p class="empty-state-description mb-4">İlk fikrinizi ekleyerek başlayın</p>
+                <a href="{{ url_for('new_idea') }}" class="btn btn-primary">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Yeni Fikir Ekle
+                </a>
+            </div>
+        {% endif %}
     </div>
     
     <div class="card">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Günlük Görevler</h2>
-            <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Tümünü Gör</a>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Hızlı Eylemler</h2>
         </div>
-        <div class="empty-state">
-            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-            </svg>
-            <h3 class="empty-state-title">Henüz görev yok</h3>
-            <p class="empty-state-description">Yapılacak görevlerinizi buradan takip edin</p>
+        <div class="grid grid-cols-2 gap-3">
+            <a href="{{ url_for('new_idea') }}" class="flex flex-col items-center justify-center p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors text-center">
+                <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span class="text-sm font-medium text-indigo-700 dark:text-indigo-300">Yeni Fikir</span>
+            </a>
+            <a href="{{ url_for('ideas') }}" class="flex flex-col items-center justify-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors text-center">
+                <svg class="w-8 h-8 text-green-600 dark:text-green-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <span class="text-sm font-medium text-green-700 dark:text-green-300">Fikirlerim</span>
+            </a>
+            <div class="flex flex-col items-center justify-center p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg opacity-50 cursor-not-allowed text-center">
+                <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-sm font-medium text-yellow-700 dark:text-yellow-300">Yeni Plan</span>
+                <span class="text-xs text-yellow-600 dark:text-yellow-400">Yakında</span>
+            </div>
+            <div class="flex flex-col items-center justify-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg opacity-50 cursor-not-allowed text-center">
+                <svg class="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                <span class="text-sm font-medium text-purple-700 dark:text-purple-300">Yeni Todo</span>
+                <span class="text-xs text-purple-600 dark:text-purple-400">Yakında</span>
+            </div>
         </div>
     </div>
 </div>

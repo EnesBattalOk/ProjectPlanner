@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Fikirlerim - DevNotebook{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Proje Fikirlerim</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Tüm proje fikirlerini burada yönet</p>
+    </div>
+    <a href="{{ url_for('new_idea') }}" class="btn btn-primary">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Yeni Fikir Ekle
+    </a>
+</div>
+
+<div class="card mb-6">
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+            <label for="statusFilter" class="label">Durum</label>
+            <select id="statusFilter" onchange="applyFilters()" class="input">
+                <option value="">Tümü</option>
+                <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Taslak</option>
+                <option value="reviewing" {% if status_filter == 'reviewing' %}selected{% endif %}>İnceleniyor</option>
+                <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Onaylandı</option>
+                <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>Geliştiriliyor</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Tamamlandı</option>
+                <option value="archived" {% if status_filter == 'archived' %}selected{% endif %}>Arşivlendi</option>
+            </select>
+        </div>
+        <div class="flex-1">
+            <label for="priorityFilter" class="label">Öncelik</label>
+            <select id="priorityFilter" onchange="applyFilters()" class="input">
+                <option value="">Tümü</option>
+                <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>Yüksek</option>
+                <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Orta</option>
+                <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Düşük</option>
+            </select>
+        </div>
+        <div class="flex items-end">
+            <button onclick="clearFilters()" class="btn btn-secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Temizle
+            </button>
+        </div>
+    </div>
+</div>
+
+{% if ideas %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for idea in ideas %}
+    <div class="card hover:shadow-lg transition-all duration-200 group">
+        <div class="flex items-start justify-between mb-3">
+            <div class="flex-1 min-w-0">
+                <a href="{{ url_for('view_idea', idea_id=idea.id) }}" class="text-lg font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 truncate block">
+                    {{ idea.title }}
+                </a>
+            </div>
+            <div class="flex items-center space-x-2 ml-2">
+                <span class="badge badge-{{ idea.status_color }}">{{ idea.status_label }}</span>
+            </div>
+        </div>
+        
+        {% if idea.elevator_pitch %}
+        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{{ idea.elevator_pitch }}</p>
+        {% else %}
+        <p class="text-gray-400 dark:text-gray-500 text-sm mb-4 italic">Henüz açıklama eklenmemiş</p>
+        {% endif %}
+        
+        <div class="flex flex-wrap gap-2 mb-4">
+            {% if idea.target_audience %}
+            <span class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md">
+                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                {{ idea.target_audience|truncate(20) }}
+            </span>
+            {% endif %}
+            {% if idea.tech_stack %}
+            <span class="text-xs px-2 py-1 bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-md">
+                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+                {{ idea.tech_stack|truncate(25) }}
+            </span>
+            {% endif %}
+            <span class="badge badge-{{ idea.priority_color }} text-xs">{{ idea.priority_label }}</span>
+        </div>
+        
+        <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-slate-700">
+            <span class="text-xs text-gray-400 dark:text-gray-500">
+                {{ idea.updated_at.strftime('%d %b %Y') }}
+            </span>
+            <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <a href="{{ url_for('edit_idea', idea_id=idea.id) }}" class="p-1.5 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors" title="Düzenle">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </a>
+                <form action="{{ url_for('delete_idea', idea_id=idea.id) }}" method="POST" class="inline" onsubmit="return confirm('Bu fikri silmek istediğinizden emin misiniz?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="p-1.5 text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors" title="Sil">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <div class="empty-state py-12">
+        <svg class="empty-state-icon w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+        <h3 class="empty-state-title text-xl">Henüz fikir eklenmemiş</h3>
+        <p class="empty-state-description mb-6">Yeni bir proje fikri ekleyerek başlayın. Fikirlerinizi burada organize edebilir ve geliştirebilirsiniz.</p>
+        <a href="{{ url_for('new_idea') }}" class="btn btn-primary text-lg px-6 py-3">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            İlk Fikrini Ekle
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<script>
+function applyFilters() {
+    const status = document.getElementById('statusFilter').value;
+    const priority = document.getElementById('priorityFilter').value;
+    
+    let url = '{{ url_for("ideas") }}';
+    const params = new URLSearchParams();
+    
+    if (status) params.set('status', status);
+    if (priority) params.set('priority', priority);
+    
+    if (params.toString()) {
+        url += '?' + params.toString();
+    }
+    
+    window.location.href = url;
+}
+
+function clearFilters() {
+    window.location.href = '{{ url_for("ideas") }}';
+}
+</script>
+{% endblock %}
