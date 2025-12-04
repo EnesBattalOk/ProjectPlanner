@@ -216,6 +216,16 @@
     color: #e5e7eb;
 }
 
+.badge-purple {
+    background-color: #f3e8ff;
+    color: #7c3aed;
+}
+
+.dark .badge-purple {
+    background-color: #4c1d95;
+    color: #ddd6fe;
+}
+
 .sidebar-active {
     background-color: #eef2ff;
     color: #4338ca;
